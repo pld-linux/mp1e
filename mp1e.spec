@@ -5,12 +5,12 @@
 Summary:	MP1E - Real Time Software MPEG-1 Encoder
 Summary(pl):	MP1E - koder MPEG-1 Real Time Software
 Name:		mp1e
-Version:	1.9.3
+Version:	1.9.4
 Release:	1
 License:	GPL v2
 Group:		X11/Applications/Multimedia
 Source0:	http://dl.sourceforge.net/zapping/%{name}-%{version}.tar.bz2
-# Source0-md5:	7f85e230d02228538e5771ff1e468e6e
+# Source0-md5:	4dad97af4db5d4ba61c3a2aec5ebd932
 Patch0:		%{name}-common.patch
 URL:		http://zapping.sourceforge.net/
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
@@ -19,7 +19,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	esound-devel
 BuildRequires:	libtool
-Requires:	%{name}-libs = %{version}
+Requires:	%{name}-libs = %{version}-%{release}
 # x86 or only i586/i686/athlon?
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -51,7 +51,7 @@ program mp1e oraz backend mp1e w rte.
 Summary:	Development files for MP1E library
 Summary(pl):	Pliki programistyczne biblioteki MP1E
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Development files for MP1E library.
@@ -63,7 +63,7 @@ Pliki programistyczne biblioteki MP1E.
 Summary:	Static MP1E library
 Summary(pl):	Statyczna biblioteka MP1E
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static MP1E library.
