@@ -76,7 +76,7 @@ Statyczna biblioteka MP1E.
 %patch0 -p1
 
 rm -f macros/{alsa,as}.m4
-%if %{without alsa}
+%if !%{with alsa}
 echo 'AC_DEFUN([AM_PATH_ALSA], [$3])' > macros/alsa.m4
 %endif
 
