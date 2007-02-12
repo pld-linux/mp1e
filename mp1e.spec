@@ -3,7 +3,7 @@
 %bcond_without	alsa	# without ALSA support
 #
 Summary:	MP1E - Real Time Software MPEG-1 Encoder
-Summary(pl):	MP1E - koder MPEG-1 Real Time Software
+Summary(pl.UTF-8):   MP1E - koder MPEG-1 Real Time Software
 Name:		mp1e
 Version:	1.9.4
 Release:	1
@@ -29,46 +29,46 @@ MP1E program records video and audio from a v4l or v4l2 video capture
 device and an OSS or ALSA audio device, as MPEG-1 system stream. Only
 x86 CPUs with MMX extension are supported.
 
-%description -l pl
-Program MP1E zapisuje jako strumieñ MPEG-1 obraz i d¼wiêk z urz±dzenia
-przechwytywania obrazu zgodnego z v4l lub v4l2 oraz urz±dzenia d¼wiêku
-OSS lub ALSA. Obs³ugiwane s± tylko procesory x86 z rozszerzeniem MMX.
+%description -l pl.UTF-8
+Program MP1E zapisuje jako strumieÅ„ MPEG-1 obraz i dÅºwiÄ™k z urzÄ…dzenia
+przechwytywania obrazu zgodnego z v4l lub v4l2 oraz urzÄ…dzenia dÅºwiÄ™ku
+OSS lub ALSA. ObsÅ‚ugiwane sÄ… tylko procesory x86 z rozszerzeniem MMX.
 
 %package libs
 Summary:	MP1E - Real Time Software MPEG-1 Encoder library
-Summary(pl):	Biblioteka MP1E - kodera MPEG-1 Real Time Software
+Summary(pl.UTF-8):   Biblioteka MP1E - kodera MPEG-1 Real Time Software
 Group:		Libraries
 
 %description libs
 MP1E - Real Time Software MPEG-1 Encoder library, used by mp1e program
 and mp1e backend in rte.
 
-%description libs -l pl
-Biblioteka MP1E - kodera MPEG-1 Real Time Software, u¿ywana przez
+%description libs -l pl.UTF-8
+Biblioteka MP1E - kodera MPEG-1 Real Time Software, uÅ¼ywana przez
 program mp1e oraz backend mp1e w rte.
 
 %package devel
 Summary:	Development files for MP1E library
-Summary(pl):	Pliki programistyczne biblioteki MP1E
+Summary(pl.UTF-8):   Pliki programistyczne biblioteki MP1E
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Development files for MP1E library.
 
-%description devel -l pl
+%description devel -l pl.UTF-8
 Pliki programistyczne biblioteki MP1E.
 
 %package static
 Summary:	Static MP1E library
-Summary(pl):	Statyczna biblioteka MP1E
+Summary(pl.UTF-8):   Statyczna biblioteka MP1E
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static MP1E library.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczna biblioteka MP1E.
 
 %prep
