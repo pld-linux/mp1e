@@ -3,7 +3,7 @@
 %bcond_without	alsa	# without ALSA support
 #
 Summary:	MP1E - Real Time Software MPEG-1 Encoder
-Summary(pl.UTF-8):   MP1E - koder MPEG-1 Real Time Software
+Summary(pl.UTF-8):	MP1E - koder MPEG-1 Real Time Software
 Name:		mp1e
 Version:	1.9.4
 Release:	1
@@ -36,7 +36,7 @@ OSS lub ALSA. Obsługiwane są tylko procesory x86 z rozszerzeniem MMX.
 
 %package libs
 Summary:	MP1E - Real Time Software MPEG-1 Encoder library
-Summary(pl.UTF-8):   Biblioteka MP1E - kodera MPEG-1 Real Time Software
+Summary(pl.UTF-8):	Biblioteka MP1E - kodera MPEG-1 Real Time Software
 Group:		Libraries
 
 %description libs
@@ -49,7 +49,7 @@ program mp1e oraz backend mp1e w rte.
 
 %package devel
 Summary:	Development files for MP1E library
-Summary(pl.UTF-8):   Pliki programistyczne biblioteki MP1E
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki MP1E
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
@@ -61,7 +61,7 @@ Pliki programistyczne biblioteki MP1E.
 
 %package static
 Summary:	Static MP1E library
-Summary(pl.UTF-8):   Statyczna biblioteka MP1E
+Summary(pl.UTF-8):	Statyczna biblioteka MP1E
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
