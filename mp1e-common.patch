@@ -27,11 +27,10 @@ diff -Nur mp1e-1.9.3.orig/configure.in mp1e-1.9.3/configure.in
  
  dnl
  dnl V4l/2 always compiled in
-diff -Nur mp1e-1.9.3.orig/Makefile.am mp1e-1.9.3/Makefile.am
---- mp1e-1.9.3.orig/Makefile.am	2002-12-14 01:43:43.000000000 +0100
-+++ mp1e-1.9.3/Makefile.am	2003-11-10 23:16:18.116203496 +0100
-@@ -29,14 +29,22 @@
- dist-hook:
+--- mp1e-1.9.4.orig/Makefile.am	2002-12-14 01:43:43.000000000 +0100
++++ mp1e-1.9.4/Makefile.am	2003-11-10 23:16:18.116203496 +0100
+@@ -31,14 +31,22 @@ dist-hook:
+ 		rm -rf $(distdir)/$$file; done
  
  bin_PROGRAMS = mp1e
 +lib_LTLIBRARIES = libmp1e_common.la

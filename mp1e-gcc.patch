@@ -1,0 +1,167 @@
+--- mp1e-1.9.4/common/mmx.h.orig	2004-04-08 20:21:36.000000000 +0200
++++ mp1e-1.9.4/common/mmx.h	2023-07-20 16:50:32.264603637 +0200
+@@ -59,8 +59,8 @@ typedef	union {
+ 
+ extern int cpu_detection(void);
+ 
+-#if __GNUC__ == 3
+-# if __GNUC_MINOR__ > 3
++#if __GNUC__ >= 3
++# if (__GNUC__ > 3) || (__GNUC_MINOR__ > 3)
+ #  warning Compilation with your version of gcc is untested,
+ #  warning may fail or create incorrect code.
+ # endif
+--- mp1e-1.9.4/video/mpeg1.c.orig	2003-11-13 06:02:12.000000000 +0100
++++ mp1e-1.9.4/video/mpeg1.c	2023-07-20 20:14:50.401528942 +0200
+@@ -2814,13 +2814,13 @@ option_set(rte_codec *codec, const char
+ 	mpeg1_context *mpeg1 = PARENT(codec, mpeg1_context, codec);
+ 	rte_context *context = codec->context;
+ 
+-	if (0) {
++#if 0
+ 		static char *option_print(rte_codec *, const char *, va_list);
+ 		char *str = option_print(codec, keyword, args);
+ 
+ 		printv(0, "mpeg1/option_set(%p, %s, %s)\n", mpeg1, keyword, str);
+ 		free(str);
+-	}
++#endif
+ 
+ 	/* Preview runtime changes here */
+ 
+--- mp1e-1.9.4/common/bstream.h.orig	2002-09-12 14:25:13.000000000 +0200
++++ mp1e-1.9.4/common/bstream.h	2023-07-20 20:16:16.737727885 +0200
+@@ -60,7 +60,7 @@ do {									\
+ 	if (__builtin_constant_p(n))					\
+ 		__asm__ __volatile__ (					\
+ 			"\tpsllq %0,%%mm0;\n"				\
+-			:: "im" ((n)) : "cc" FPU_REGS);			\
++			:: "i" ((n)) : "cc" FPU_REGS);			\
+ 			/* never m but suppress warning */		\
+ 	else								\
+ 		__asm__ __volatile__ (					\
+@@ -68,11 +68,6 @@ do {									\
+ 			"\tpsllq %%mm2,%%mm0;\n"			\
+ 			:: "rm" ((unsigned int)(n)) : "cc" FPU_REGS);	\
+ 									\
+-	if (0&&__builtin_constant_p(v))					\
+-		__asm__ __volatile__ ("\tpor %0,%%mm0;\n"		\
+-			:: "m" ((unsigned long long)(v))		\
+-			: "cc" FPU_REGS);				\
+-	else								\
+ 		__asm__ __volatile__ (					\
+ 			"\tmovd %0,%%mm1;\n"				\
+ 			"\tpor %%mm1,%%mm0;\n"				\
+--- mp1e-1.9.4/video/motion.c.orig	2002-10-02 22:50:42.000000000 +0200
++++ mp1e-1.9.4/video/motion.c	2023-07-20 20:52:04.922756835 +0200
+@@ -3900,7 +3900,7 @@ predict_bidirectional_motion(mpeg1_conte
+  *  mblock[1] = org - old_ref;
+  *  mblock[3] = old_ref; 	// for reconstruction by idct_inter
+  */
+-unsigned int
++unsigned int reg(1)
+ predict_forward_packed(unsigned char *from)
+ {
+ 	int i, n, s2 = 0;
+@@ -3919,7 +3919,7 @@ predict_forward_packed(unsigned char *fr
+ 	return s2 * 256;
+ }
+ 
+-unsigned int
++unsigned int reg(1)
+ predict_forward_planar(unsigned char *from)
+ {
+ 	int i, j, n, s2 = 0;
+@@ -3961,7 +3961,7 @@ predict_forward_planar(unsigned char *fr
+  *
+  *  mblock[1] = org - new_ref;
+  */
+-unsigned int
++unsigned int reg(1)
+ predict_backward_packed(unsigned char *from)
+ {
+ 	int i, n, s2 = 0;
+--- mp1e-1.9.4/audio/mp2.c.orig	2003-01-03 05:54:31.000000000 +0100
++++ mp1e-1.9.4/audio/mp2.c	2023-07-20 21:05:54.444929594 +0200
+@@ -160,7 +160,7 @@ fetch_samples(mp2_context *mp2, int chan
+ 	/* const */ int spf = SAMPLES_PER_FRAME * cs;
+ 	/* const */ int la = (512 - 32) * cs;
+ 	buffer *buf = mp2->ibuf;
+-	unsigned char *o;
++	uint32_t *o;
+ 	int todo;
+ 
+ 	if (mp1e_sync_break(&mp2->codec.sstr, buf->time
+@@ -171,7 +171,7 @@ fetch_samples(mp2_context *mp2, int chan
+ 
+ 	memcpy(mp2->wrap, mp2->wrap + spf, la);
+ 
+-	o = mp2->wrap + la;
++	o = (uint32_t *)(mp2->wrap + la);
+ 
+ 	if (mp2->format_scale)
+ 		for (todo = 0; todo < SAMPLES_PER_FRAME; todo++) {
+@@ -188,9 +188,9 @@ fetch_samples(mp2_context *mp2, int chan
+ 				temp = ((uint16_t *) buf->data)[mp2->i16 >> 16] << 8;	/* 00RRLL00 or 00LLRR00 */
+ 				temp = ((temp << 8) | temp) & 0xFF00FF00;		/* RRxxLLxx or LLxxRRxx */
+ 
+-				*((uint32_t *) o)++ = mp2->format_sign ^ temp;
++				*o++ = mp2->format_sign ^ temp;
+ 			} else
+-				*((uint16_t *) o)++ = mp2->format_sign
++				*o++ = mp2->format_sign
+ 					^ (((uint8_t *) buf->data)[mp2->i16 >> 16] << 8);
+ 
+ 			mp2->i16 += mp2->incr;
+@@ -205,10 +205,10 @@ fetch_samples(mp2_context *mp2, int chan
+ 			/* 16 -> 16 bit, same endian */
+ 
+ 			if (channels > 1)
+-				*((uint32_t *) o)++ = mp2->format_sign
++				*o++ = mp2->format_sign
+ 					^ ((uint32_t *) buf->data)[mp2->i16 >> 16];
+ 			else
+-				*((uint16_t *) o)++ = mp2->format_sign
++				*o++ = mp2->format_sign
+ 					^ ((uint16_t *) buf->data)[mp2->i16 >> 16];
+ 
+ 			mp2->i16 += mp2->incr;
+@@ -511,8 +511,11 @@ encode(mp2_context *mp2, unsigned char *
+ 
+ 	bflush(&mp2->out);
+ 
+-	while (((char *) mp2->out.p - (char *) mp2->out.p1) < bpf)
+-		*((unsigned int *)(mp2->out.p))++ = 0;
++	while (((char *) mp2->out.p - (char *) mp2->out.p1) < bpf) {
++		uint32_t *p = (void*)mp2->out.p;
++		*p++ = 0;
++		mp2->out.p = (void*)p;
++	}
+ }
+ 
+ #define C (&mp2->codec.codec)
+@@ -622,7 +625,8 @@ mp1e_mp2(void *codec)
+ 	printv(3, "Audio compression thread\n");
+ 
+ 	/* Round nearest, double prec, no exceptions */
+-	__asm__ __volatile__ ("fldcw %0" :: "m" (0x027F));
++	uint16_t cw = 0x027F;
++	__asm__ __volatile__ ("fldcw %0" :: "m" (cw));
+ 
+ 	assert(mp2->codec.codec.state == RTE_STATE_RUNNING);
+ 
+--- mp1e-1.9.4/options.c.orig	2003-01-03 06:37:33.000000000 +0100
++++ mp1e-1.9.4/options.c	2023-07-20 21:09:41.427033260 +0200
+@@ -175,10 +175,11 @@ long_options[] = {
+ 	{ NULL }
+ };
+ 
++static rte_bool parse_option(int c);
++
+ static void
+ options_from_file(char *name, rte_bool fail)
+ {
+-	static rte_bool parse_option(int c);
+ 	static int recursion = 0;
+ 	char *s, *p, buffer[300];
+ 	FILE *fi;

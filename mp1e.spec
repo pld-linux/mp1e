@@ -1,6 +1,7 @@
 #
 # Conditional build:
-%bcond_without	alsa	# without ALSA support
+%bcond_without	alsa		# ALSA support
+%bcond_without	static_libs	# static library
 #
 Summary:	MP1E - Real Time Software MPEG-1 Encoder
 Summary(pl.UTF-8):	MP1E - koder MPEG-1 Real Time Software
@@ -9,10 +10,12 @@ Version:	1.9.4
 Release:	1
 License:	GPL v2
 Group:		X11/Applications/Multimedia
-Source0:	http://dl.sourceforge.net/zapping/%{name}-%{version}.tar.bz2
+#Source0Download: https://sourceforge.net/projects/zapping/files/OldFiles/
+Source0:	https://downloads.sourceforge.net/zapping/%{name}-%{version}.tar.bz2
 # Source0-md5:	4dad97af4db5d4ba61c3a2aec5ebd932
 Patch0:		%{name}-common.patch
-URL:		http://zapping.sourceforge.net/
+Patch1:		%{name}-gcc.patch
+URL:		https://zapping.sourceforge.net/Zapping/index.html
 %{?with_alsa:BuildRequires:	alsa-lib-devel >= 0.9.0}
 BuildRequires:	audiofile-devel
 BuildRequires:	autoconf
@@ -74,9 +77,10 @@ Statyczna biblioteka MP1E.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
-rm -f macros/{alsa,as}.m4
-%if !%{with alsa}
+%{__rm} macros/{alsa,as}.m4
+%if %{without alsa}
 echo 'AC_DEFUN([AM_PATH_ALSA], [$3])' > macros/alsa.m4
 %endif
 
@@ -87,7 +91,8 @@ echo 'AC_DEFUN([AM_PATH_ALSA], [$3])' > macros/alsa.m4
 %{__autoheader}
 %{__automake}
 %configure \
-	--enable-shared
+	--enable-shared \
+	%{!?with_static_libs:--disable-static}
 %{__make}
 
 %install
@@ -104,19 +109,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/*
-%{_mandir}/man1/*
+%attr(755,root,root) %{_bindir}/mp1e
+%{_mandir}/man1/mp1e.1*
 
 %files libs
 %defattr(644,root,root,755)
 %doc AUTHORS BUGS ChangeLog README
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmp1e_common.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmp1e_common.so.0
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so
-%{_libdir}/lib*.la
+%attr(755,root,root) %{_libdir}/libmp1e_common.so
+%{_libdir}/libmp1e_common.la
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{_libdir}/libmp1e_common.a
+%endif
