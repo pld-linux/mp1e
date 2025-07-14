@@ -40,7 +40,7 @@ OSS lub ALSA. Obsługiwane są tylko procesory x86 z rozszerzeniem MMX.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P0 -p1
 
 %{__rm} macros/{alsa,as}.m4
 %if %{without alsa}
